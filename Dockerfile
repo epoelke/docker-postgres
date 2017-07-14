@@ -10,7 +10,9 @@ RUN /sbin/apk update && \
   /sbin/apk add bash tar gzip build-base readline-dev openssl \
     openssl-dev zlib-dev libxml2-dev glib-lang wget ca-certificates \ 
     libssl1.0 && \
-  mkdir -p /usr/local/bin && \
+  /bin/mkdir -p /usr/local/bin && \
+  /bin/mkdir -p /data && \
+  /bin/chown -R 70:70 /data && \
   /bin/bash /pg-build.sh -v $PG_VERSION && \
   /bin/bash /consul-template.sh -v $CONSUL_TEMPLATE_VERSION && \
   /bin/rm /pg-build.sh && \
