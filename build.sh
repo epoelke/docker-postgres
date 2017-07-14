@@ -2,10 +2,19 @@
 set -e
 set -x
 
-while getopts “v:” OPTION; do
+PUSH="false"
+CLEAN="false"
+
+while getopts “v:pc” OPTION; do
   case $OPTION in
     v)
       VERSION=$OPTARG
+      ;;
+    p)
+      PUSH="true"
+      ;;
+    c)
+      CLEAN="true"
       ;;
   esac
 done
@@ -20,18 +29,18 @@ if [ -f ./${VERSION}/vars.sh ]; then
 
   if [ -z "${PG_VERSION}" ]; then
     echo "PG_VERSION not set in vars.sh!"
-    exit 1 
-  fi 
+    exit 1
+  fi
 
   if [ -z "${CONSUL_TEMPLATE_VERSION}" ]; then
     echo "CONSUL_TEMPLATE_VERSION not set in vars.sh!"
-    exit 1 
-  fi 
+    exit 1
+  fi
 
   if [ -z "${CMD}" ]; then
     echo "CMD not set in vars.sh!"
-    exit 1 
-  fi 
+    exit 1
+  fi
 
 else
   echo "./${VERSION}/vars.sh does not exist!"
@@ -60,15 +69,19 @@ function dockerbuild() {
     --build-arg CONSUL_TEMPLATE_VERSION=${CONSUL_TEMPLATE_VERSION} \
     --build-arg CMD="${CMD}" \
     --tag epoelke/postgres:$PG_VERSION .
-  docker run --name new_build epoelke/postgres:$PG_VERSION echo 'new build' 
+  docker run --name new_build epoelke/postgres:$PG_VERSION echo 'new build'
   docker export new_build | docker import -c "CMD ${CMD}" \
     -c "USER postgres" - epoelke/postgres:$PG_VERSION
-  docker push epoelke/postgres:$PG_VERSION
+  if [ $PUSH == "true" ]; then
+    docker push epoelke/postgres:$PG_VERSION
+  fi
 }
 
 function main() {
   dockerbuild
-  clean
+  if [ $CLEAN == "true" ]; then
+    clean
+  fi
 }
 
 trap 'err_exit' 1 2 3 15 ERR
