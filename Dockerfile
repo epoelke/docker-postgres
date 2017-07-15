@@ -12,7 +12,7 @@ RUN /sbin/apk update && \
     libssl1.0 && \
   /bin/mkdir -p /usr/local/bin && \
   /bin/mkdir -p /data && \
-  /bin/chown -R 70:70 /data && \
+  /bin/chown -R postgres:postgres /data && \
   /bin/bash /pg-build.sh -v $PG_VERSION && \
   /bin/bash /consul-template.sh -v $CONSUL_TEMPLATE_VERSION && \
   /bin/rm /pg-build.sh && \
@@ -22,7 +22,12 @@ RUN /sbin/apk update && \
   /bin/rm -rf /var/cache/apk/* && \
   /bin/chmod +x /usr/local/bin/entrypoint.sh && \
   /bin/mkdir -p /var/lib/postgresql && \
-  /bin/chown -R postgres:postgres /var/lib/postgresql
+  /bin/chown -R postgres:postgres /var/lib/postgresql && \
+  /bin/mkdir -p /usr/local/templates && \
+  /bin/mkdir -p /usr/local/etc/postgres && \
+  /bin/chown postgres:postgres /usr/local/etc/postgres
+COPY ./templates/postgresql.tmpl /usr/local/templates
+COPY ./templates/pg_hba.tmpl /usr/local/templates
 USER postgres
 ARG CMD=/usr/local/bin/entrypoint.sh
 CMD $CMD
