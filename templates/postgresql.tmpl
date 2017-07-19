@@ -77,13 +77,14 @@ max_connections = 100			# (change requires restart)
 # - Security and Authentication -
 
 #authentication_timeout = 1min		# 1s-600s
-#ssl = off				# (change requires restart)
-#ssl_ciphers = 'HIGH:MEDIUM:+3DES:!aNULL' # allowed SSL ciphers
-					# (change requires restart)
-#ssl_prefer_server_ciphers = on		# (change requires restart)
-#ssl_ecdh_curve = 'prime256v1'		# (change requires restart)
-#ssl_cert_file = '/etc/ssl/server.crt'		# (change requires restart)
-#ssl_key_file = '/etc/ssl/server.key'		# (change requires restart)
+ssl = on				# (change requires restart)
+## template this
+ssl_ciphers = 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH' # allowed SSL ciphers
+ssl_prefer_server_ciphers = on		# (change requires restart)
+## template this
+ssl_ecdh_curve = 'secp384r1'		# (change requires restart)
+ssl_cert_file = '/etc/ssl/server.crt'		# (change requires restart)
+ssl_key_file = '/etc/ssl/server.key'		# (change requires restart)
 #ssl_ca_file = ''			# (change requires restart)
 #ssl_crl_file = ''			# (change requires restart)
 #password_encryption = on

@@ -1,4 +1,9 @@
 #!/bin/sh
+if [ ! -f /data/.dbinit ]; then
+  /usr/local/bin/initdb -D /data
+  touch /data/.dbinit
+fi
+
 consul-template \
   -consul-addr $CONSUL_ADDR \
   -template "/usr/local/templates/pg_hba.tmpl:/usr/local/etc/postgres/pg_hba.conf" \

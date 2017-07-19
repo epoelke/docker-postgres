@@ -9,7 +9,7 @@ ARG CONSUL_TEMPLATE_VERSION="0.19.0"
 RUN /sbin/apk update && \
   /sbin/apk add bash tar gzip build-base readline-dev openssl \
     openssl-dev zlib-dev libxml2-dev glib-lang wget ca-certificates \ 
-    libssl1.0 && \
+    libssl1.0 libressl && \
   /bin/mkdir -p /usr/local/bin && \
   /bin/mkdir -p /data && \
   /bin/chown -R postgres:postgres /data && \
